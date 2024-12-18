@@ -15,3 +15,5 @@ export interface SignupRequest extends LoginRequest {
   nickname: string;
   profileImg: File
 }
+
+export interface SignupResponse {}

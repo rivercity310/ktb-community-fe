@@ -9,7 +9,7 @@ const useLogin = () => {
     mutationFn: login,
     onSuccess: ({ data }) => {
       setAuth(data.data);
-      //alert('Login Success');
+      alert('Login Success');
     },
     onError: () => {
       clearAuth();
