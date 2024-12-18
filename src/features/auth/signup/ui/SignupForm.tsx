@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import { SignupRequest } from '@/entities/auth/types.ts';
 import NicknameInput from '@/shared/ui/input/NicknameInput.tsx';
 import PasswordInput from '@/shared/ui/input/PasswordInput.tsx';
@@ -15,6 +15,7 @@ import {
   handlePasswordHelperText,
   handleProfileImgHelperText,
 } from '@/shared/utils/helper.ts';
+import { EMAIL_HELPER_TEXT, NICKNAME_HELPER_TEXT } from '@/shared/constants/helperText.ts';
 
 interface SignupFormProps {
   pendingRequest: boolean;
@@ -22,37 +23,30 @@ interface SignupFormProps {
 }
 
 const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
-  const emailRef = useRef<HTMLInputElement | null>(null);
-  const nicknameRef = useRef<HTMLInputElement | null>(null);
-
   const {
-    email,
-    password,
-    passwordCheck,
-    nickname,
-    profileImg,
-    setRef,
-    setField,
+    emailDuplication,
+    nicknameDuplication,
   } = useSignupStore();
 
-  useEffect(() => {
-    setRef("emailRef", emailRef);
-    setRef("nicknameRef", nicknameRef);
-  }, [setRef]);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const nicknameRef = useRef<HTMLInputElement>(null);
+
+  const [formData, setFormData] = React.useState<SignupRequest & { passwordCheck: string }>({
+    email: '',
+    password: '',
+    passwordCheck: '',
+    nickname: '',
+    profileImg: null,
+  });
+
+  const { email, password, passwordCheck, nickname, profileImg } = formData;
+
+  const handleInputChange = (field: keyof SignupRequest | 'passwordCheck', value: string | File | null) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!email || !password || !nickname || !profileImg) {
-      alert('모든 필드를 입력해주세요.');
-      return;
-    }
-
-    if (password !== passwordCheck) {
-      alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-      return;
-    }
-
     onSubmit({ email, password, nickname, profileImg });
   };
 
@@ -68,17 +62,18 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           <HelperText text={handleProfileImgHelperText(profileImg)} />
           <FileInputAvatar
             className="m-auto mt-3"
-            onImageChange={(file: File | null) => setField("profileImg", file)} />
+            onImageChange={(file: File | null) => handleInputChange('profileImg', file)} />
         </div>
 
         <EmailInput
+          id="email"
           ref={emailRef}
           label="* 이메일"
-          helperText={handleEmailHelperText(email)}
+          helperText={emailDuplication ? EMAIL_HELPER_TEXT.DUPLICATED : handleEmailHelperText(email)}
           name="email"
           value={email}
           placeholder="이메일을 입력해주세요."
-          onChange={e => setField("email", e.target.value)}
+          onChange={e => handleInputChange('email', e.target.value)}
         />
 
         <PasswordInput
@@ -87,7 +82,7 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           name="password"
           value={password}
           placeholder="비밀번호를 입력해주세요."
-          onChange={e => setField("password", e.target.value)}
+          onChange={e => handleInputChange('password', e.target.value)}
         />
 
         <PasswordInput
@@ -96,17 +91,18 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           name="passwordCheck"
           value={passwordCheck}
           placeholder="비밀번호를 한번 더 입력해주세요."
-          onChange={e => setField("passwordCheck", e.target.value)}
+          onChange={e => handleInputChange('passwordCheck', e.target.value)}
         />
 
         <NicknameInput
+          id="nickname"
           ref={nicknameRef}
           label="* 닉네임"
-          helperText={handleNicknameHelperText(nickname)}
+          helperText={nicknameDuplication ? NICKNAME_HELPER_TEXT.DUPLICATED : handleNicknameHelperText(nickname)}
           placeholder="닉네임을 입력해주세요."
           name="nickname"
           value={nickname}
-          onChange={e => setField("nickname", e.target.value)}
+          onChange={e => handleInputChange('nickname', e.target.value)}
         />
 
         <div className="flex">

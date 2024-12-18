@@ -3,6 +3,7 @@ import Input from '@/shared/ui/input/Input.tsx';
 import HelperText from '@/shared/ui/text/HelperText.tsx';
 
 interface EmailInputProps {
+  id: string
   label: string;
   helperText: string;
   placeholder: string;
@@ -12,10 +13,10 @@ interface EmailInputProps {
 }
 
 const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>((props, ref) => {
-  const { label, name, value, placeholder, helperText, onChange } = props;
+  const { id, label, name, value, placeholder, helperText, onChange, ...rest } = props;
 
   return (
-    <div className="flex flex-col gap-1">
+    <div {...rest} className="flex flex-col gap-1">
       <p className="font-bold">{label}</p>
       <label className="input input-bordered flex items-center gap-2">
         <svg
@@ -29,6 +30,7 @@ const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>((props, ref) =>
             d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
         </svg>
         <Input
+          id={id}
           ref={ref}
           autoComplete="email"
           type="text"

@@ -13,7 +13,7 @@ export interface LoginResponse {
 
 export interface SignupRequest extends LoginRequest {
   nickname: string;
-  profileImg: File
+  profileImg: File | null;
 }
 
 export interface SignupResponse {}

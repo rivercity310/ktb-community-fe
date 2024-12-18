@@ -1,28 +1,15 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 import Avatar, { AvatarProps } from '@/shared/ui/avatar/Avatar';
 import Input from '@/shared/ui/input/Input.tsx';
 import { validateProfileImg } from '@/shared/utils/validator.ts';
-import useSignupStore from '@/features/auth/signup/store/useSignupStore.ts';
 
-type ButtonAvatarProps = AvatarProps & {
+type FileInputAvatar = AvatarProps & {
   onImageChange: (file: File | null) => void;
-  className?: string
+  className?: string;
 };
 
-const FileInputAvatar: FC<ButtonAvatarProps> = (props) => {
+const FileInputAvatar: FC<FileInputAvatar> = ({ onImageChange, className: _className, ...props }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { onImageChange, className: _className } = props;
-  const { setRef } = useSignupStore();
-
-  useEffect(() => {
-    setRef('fileInputRef', fileInputRef);
-  }, [setRef]);
-
-  // Avatar 클릭되면 file input 트리거
-  const handleButtonClick = () => {
-    fileInputRef?.current?.click();
-  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -50,10 +37,10 @@ const FileInputAvatar: FC<ButtonAvatarProps> = (props) => {
           backgroundPosition: 'center',
           cursor: 'pointer',
         }}
-        onClick={handleButtonClick}
+        onClick={() => document.getElementById('file-input')?.click()}
       />
       <Input
-        ref={fileInputRef}
+        id="file-input"
         type="file"
         accept="image/*"
         style={{ display: 'none' }}
