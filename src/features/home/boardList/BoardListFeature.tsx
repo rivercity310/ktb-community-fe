@@ -1,32 +1,52 @@
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 import { getBoardList } from '@/entities/board/api.ts';
-import { ApiResponse, ErrorResponse } from '@/shared/types/api.ts';
-import { BoardListResponse } from '@/entities/board/types.ts';
-import { AxiosError } from 'axios';
 import BoardCard from '@/features/home/boardList/ui/BoardCard.tsx';
 
 const BoardListFeature = () => {
-  const [offset, setOffset] = useState(0);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const limit = 10;
 
-  const { data: boardList, isPending } = useQuery<ApiResponse<BoardListResponse>, AxiosError<ErrorResponse>>({
-    queryKey: ['boardList', offset],
-    queryFn: () => getBoardList(offset, 10),
-    staleTime: 1000 * 60 * 5,  // 5분 캐싱
-    retry: 3,
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['boardList'],
+    queryFn: ({ pageParam }) => getBoardList(pageParam, limit),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextCursor : undefined,
   });
 
-  if (isPending || !boardList) {
-    return <p>Loading...</p>;
-  }
+  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting && hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, { threshold: 1.0 });
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [hasNextPage]);
 
   return (
     <div>
-      <div className="flex flex-col gap-12">
-        {boardList.data.map((board) => (
-          <BoardCard key={board.boardId} board={board} />
-        ))}
+      <div className="grid grid-cols-2 gap-12">
+        {data?.pages.map((page) =>
+          page.data.map((board) => <BoardCard key={board.boardId} board={board} />),
+        )}
       </div>
+      <div ref={observerRef} className="h-10"></div>
+      {isFetchingNextPage && <p>Loading more...</p>}
     </div>
   );
 };

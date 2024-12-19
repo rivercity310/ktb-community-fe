@@ -1,14 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ENV } from '@/shared/config/env.ts';
 import { useAuthStore } from '@/entities/auth/model.ts';
 import UserAvatar from '@/shared/ui/avatar/UserAvatar.tsx';
+import React from 'react';
 
 const HeaderWidget = () => {
-  const user = useAuthStore(state => state.user);
+  const navigate = useNavigate();
+  const { user, clearAuth } = useAuthStore();
+
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    clearAuth();
+    navigate('/');
+  }
 
   return (
-    <div className="navbar bg-base-100 dark:bg-[#121212] py-10">
-      <div className="navbar-start ml-12">
+    <div className="navbar bg-base-300 dark:bg-gray-700 py-3">
+      <div className="navbar-start ml-6">
         {user && (
           <div className="dropdown dropdown-hover dropdown-bottom">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -27,14 +35,14 @@ const HeaderWidget = () => {
                 <button>비밀번호수정</button>
               </li>
               <li>
-                <button>Logout</button>
+                <button onClick={handleLogout}>Logout</button>
               </li>
             </ul>
           </div>
         )}
       </div>
 
-      <div className="navbar-center my-12">
+      <div className="navbar-center">
         <Link to="/" className="btn btn-ghost text-xl">{ENV.LOGO_TEXT}</Link>
       </div>
 
