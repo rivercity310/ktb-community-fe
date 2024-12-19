@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Input from '@/shared/ui/input/Input.tsx';
 import HelperText from '@/shared/ui/text/HelperText.tsx';
 
 interface PasswordInputProps {
+  id?: string;
   label: string;
   helperText: string;
   placeholder: string;
@@ -11,7 +12,9 @@ interface PasswordInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const PasswordInput = ({ label, helperText, placeholder, name, value, onChange }: PasswordInputProps) => {
+const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>((props, ref) => {
+  const { id, label, helperText, onChange, value, placeholder, name} = props
+
   return (
     <div className="flex flex-col gap-1">
       <p className="font-bold">{label}</p>
@@ -27,6 +30,8 @@ const PasswordInput = ({ label, helperText, placeholder, name, value, onChange }
             clipRule="evenodd" />
         </svg>
         <Input
+          id={id}
+          ref={ref}
           autoComplete="new-password"
           type="password"
           name={name}
@@ -38,6 +43,6 @@ const PasswordInput = ({ label, helperText, placeholder, name, value, onChange }
       <HelperText text={helperText}/>
     </div>
   );
-};
+});
 
 export default PasswordInput;

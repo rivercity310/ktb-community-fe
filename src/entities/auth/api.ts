@@ -5,7 +5,7 @@ import { LoginRequest, LoginResponse } from '@/entities/auth/types.ts';
 
 export const login = async (loginRequest: LoginRequest) => {
   const res = await axiosInstance.post<ApiResponse<LoginResponse>>('/auth/login', loginRequest);
-  if (res.status === HttpStatusCode.Ok) return Promise.resolve(res);
+  if (res.status === HttpStatusCode.Ok) return Promise.resolve(res.data);
   else return Promise.reject(res);
 };
 

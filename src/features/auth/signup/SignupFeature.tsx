@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { signup } from '@/entities/auth/api.ts';
 import { SignupRequest, SignupResponse } from '@/entities/auth/types.ts';
-import { AxiosError } from 'axios';
-import { HttpStatusCode } from 'axios';
 import { ErrorResponse } from '@/shared/types/api.ts';
-import SignupForm from '@/features/auth/signup/ui/SignupForm';
 import { ResponseText } from '@/shared/constants/responseText.ts';
+import SignupForm from '@/features/auth/signup/ui/SignupForm';
 import useSignupStore from '@/features/auth/signup/store/useSignupStore.ts';
 
 const SignupFeature = () => {
@@ -47,7 +46,7 @@ const SignupFeature = () => {
   const handleSignup = (signupRequest: SignupRequest) => {
     const formData = new FormData();
     Object.entries(signupRequest).forEach(([key, value]) =>
-      formData.append(key, value as string | File)
+      formData.append(key, value as string | File),
     );
     mutation.mutate(formData);
   };

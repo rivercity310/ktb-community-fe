@@ -1,55 +1,77 @@
-import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ENV } from '@/shared/config/env.ts';
-import Avatar from '@/shared/ui/avatar/Avatar.tsx';
-import { IoMdArrowRoundBack } from 'react-icons/io';
+import { useAuthStore } from '@/entities/auth/model.ts';
+import UserAvatar from '@/shared/ui/avatar/UserAvatar.tsx';
 
-interface HeaderWidgetProps {
-  showBackButton?: boolean;
-  showUserAvatar?: boolean;
-}
-
-const HeaderWidget: FC<HeaderWidgetProps> = ({ showBackButton = false, showUserAvatar = false}) => {
-  const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    navigate(-1);
-  };
-
-  const handleHomeClick = () => {
-    navigate('/');
-  };
+const HeaderWidget = () => {
+  const user = useAuthStore(state => state.user);
 
   return (
-    <header
-      className="border-b-2 border-b-gray-300 dark:border-b-gray-700 flex flex-row items-center justify-center py-3 gap-40 w-screen">
-      {/* BACK 버튼 */}
-      {showBackButton && (
-        <IoMdArrowRoundBack
-          className='text-3xl font-medium cursor-pointer'
-          onClick={handleBackClick}
-        >
-          BACK
-        </IoMdArrowRoundBack>
-      )}
+    <div className="navbar bg-base-100 dark:bg-[#121212] py-10">
+      <div className="navbar-start ml-12">
+        {user && (
+          <div className="dropdown dropdown-hover dropdown-bottom">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+              <UserAvatar
+                src={`${ENV.BASE_URL}/${user.profile}`}
+                size="48px"
+              />
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-md dropdown-content bg-base-100 rounded-box z-[1] w-[150px] py-4 shadow">
+              <li>
+                <button>회원정보</button>
+              </li>
+              <li>
+                <button>비밀번호수정</button>
+              </li>
+              <li>
+                <button>Logout</button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
 
-      {/* LOGO 텍스트 */}
-      <h1
-        className="text-2xl font-bold cursor-pointer hover:text-black dark:hover:text-white whitespace-nowrap"
-        onClick={handleHomeClick}
-      >
-        {ENV.LOGO_TEXT}
-      </h1>
+      <div className="navbar-center my-12">
+        <Link to="/" className="btn btn-ghost text-xl">{ENV.LOGO_TEXT}</Link>
+      </div>
 
-      {/* 아바타 */}
-      {showUserAvatar && (
-        <Avatar
-          size="46px"
-        />
-      )}
-
-    </header>
-
+      <div className="navbar-end mr-6">
+        <button className="btn btn-ghost btn-circle">
+          <div className="indicator">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span className="badge badge-xs badge-primary indicator-item"></span>
+          </div>
+        </button>
+        <button className="btn btn-ghost btn-circle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 };
 

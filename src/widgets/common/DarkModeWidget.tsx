@@ -1,4 +1,4 @@
-import { useDarkMode } from '@/features/common/darkMode';
+import { useDarkMode } from '@/features/common/darkMode/DarkModeFeature.tsx';
 import { FC } from 'react';
 
 interface DarkModeWidgetProps {
