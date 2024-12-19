@@ -7,6 +7,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ to }: ProtectedRouteProps) => {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  if (!isAuthenticated) alert("로그인이 필요합니다.");
   return isAuthenticated ? <Outlet /> : <Navigate to={to} replace />;
 };
 

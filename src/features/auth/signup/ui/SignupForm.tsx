@@ -8,6 +8,7 @@ import HelperText from '@/shared/ui/text/HelperText.tsx';
 import FileInputAvatar from '@/features/auth/signup/ui/FileInputAvatar.tsx';
 import useSignupStore from '@/features/auth/signup/store/useSignupStore.ts';
 import { validateEmail, validateNickname, validatePassword } from '@/shared/utils/validator.ts';
+import { EMAIL_HELPER_TEXT, NICKNAME_HELPER_TEXT, PLACEHOLDER } from '@/shared/constants/helperText.ts';
 import {
   handleEmailHelperText,
   handleNicknameHelperText,
@@ -15,7 +16,6 @@ import {
   handlePasswordHelperText,
   handleProfileImgHelperText,
 } from '@/shared/utils/helper.ts';
-import { EMAIL_HELPER_TEXT, NICKNAME_HELPER_TEXT } from '@/shared/constants/helperText.ts';
 
 interface SignupFormProps {
   pendingRequest: boolean;
@@ -72,7 +72,7 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           helperText={emailDuplication ? EMAIL_HELPER_TEXT.DUPLICATED : handleEmailHelperText(email)}
           name="email"
           value={email}
-          placeholder="이메일을 입력해주세요."
+          placeholder={PLACEHOLDER.EMAIL}
           onChange={e => handleInputChange('email', e.target.value)}
         />
 
@@ -81,8 +81,8 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           helperText={handlePasswordHelperText(password)}
           name="password"
           value={password}
-          placeholder="비밀번호를 입력해주세요."
-          onChange={e => handleInputChange('password', e.target.value)}
+          placeholder={PLACEHOLDER.PASSWORD}
+          onChange={e => handleInputChange("password", e.target.value)}
         />
 
         <PasswordInput
@@ -90,7 +90,7 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           helperText={handlePasswordCheckHelperText(password, passwordCheck)}
           name="passwordCheck"
           value={passwordCheck}
-          placeholder="비밀번호를 한번 더 입력해주세요."
+          placeholder={PLACEHOLDER.PASSWORD_CHECK}
           onChange={e => handleInputChange('passwordCheck', e.target.value)}
         />
 
@@ -99,7 +99,7 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
           ref={nicknameRef}
           label="* 닉네임"
           helperText={nicknameDuplication ? NICKNAME_HELPER_TEXT.DUPLICATED : handleNicknameHelperText(nickname)}
-          placeholder="닉네임을 입력해주세요."
+          placeholder={PLACEHOLDER.NICKNAME}
           name="nickname"
           value={nickname}
           onChange={e => handleInputChange('nickname', e.target.value)}
@@ -107,7 +107,7 @@ const SignupForm: FC<SignupFormProps> = ({ pendingRequest, onSubmit }) => {
 
         <div className="flex">
           <Button
-            className="w-[200px] m-auto"
+            className="w-[200px] m-auto mt-4"
             name="회원가입"
             disabled={pendingRequest || buttonDisabled}
           />

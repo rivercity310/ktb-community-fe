@@ -26,3 +26,10 @@ export const NICKNAME_HELPER_TEXT = Object.freeze({
 export const PROFILE_IMG_HELPER_TEXT = Object.freeze({
   EMPTY: '* 프로필 사진을 추가해주세요.',
 });
+
+export const PLACEHOLDER = Object.freeze({
+  EMAIL: '이메일을 입력해주세요.',
+  PASSWORD: '비밀번호를 입력해주세요.',
+  PASSWORD_CHECK: '비밀번호를 한번 더 입력해주세요.',
+  NICKNAME: '닉네임을 입력해주세요.',
+});
