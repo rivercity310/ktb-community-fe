@@ -1,14 +1,13 @@
 FROM node:20-alpine AS builder
-RUN mkdir -p /app
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
 ADD . .
 RUN yarn build
 
-FROM busybox
+FROM nginx:latest
 WORKDIR /app
-COPY --from=builder app/dist/. ./
-RUN echo "cp -r ./ /usr/share/nginx/html" > ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+COPY --from=builder app/dist/. /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/conf.d
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
