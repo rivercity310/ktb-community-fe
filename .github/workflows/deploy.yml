@@ -46,7 +46,7 @@ jobs:
         run: rm -f ~/.ssh/id_rsa
 
   notify:
-    needs: [deploy-and-deploy]
+    needs: [build-and-deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord Notification
