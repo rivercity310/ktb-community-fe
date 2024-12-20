@@ -6,7 +6,7 @@ const BoardDetail = () => {
 
   return (
     <div>
-      BoardDetail
+      {boardId}
     </div>
   );
 };

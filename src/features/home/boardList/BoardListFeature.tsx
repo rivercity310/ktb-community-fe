@@ -40,7 +40,7 @@ const BoardListFeature = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-12">
+      <div className="flex flex-col gap-6">
         {data?.pages.map((page) =>
           page.data.map((board) => <BoardCard key={board.boardId} board={board} />),
         )}

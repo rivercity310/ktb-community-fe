@@ -6,11 +6,11 @@ interface DarkModeWidgetProps {
 }
 
 const DarkModeWidget: FC<DarkModeWidgetProps> = ({ className: _className }) => {
-
+  const className = ['z-30', _className].join(' ')
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
-    <div className={_className}>
+    <div className={className}>
       <label className="cursor-pointer">
         <input type="checkbox" className="theme-controller hidden" value="synthwave" checked={isDarkMode}
                onChange={() => toggleDarkMode()} />
