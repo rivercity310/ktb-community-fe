@@ -25,16 +25,15 @@ jobs:
 
       - name: Decode SSH Key
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/key.pem
-          chmod 600 ~/.ssh/key.pem
-          ls -al ~/.ssh/key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > key.pem
+          chmod 600 key.pem
 
       - name: Deploy to Nginx Server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: ~/.ssh/key.pem
+          key_path: key.pem
           source: dist/ # 빌드된 Vite 정적 파일 경로
           target: /usr/share/nginx/html/ # Nginx 컨테이너와 연결된 볼륨 경로
 
