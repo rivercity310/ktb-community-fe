@@ -25,8 +25,8 @@ jobs:
 
       - name: Decode SSH Key
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > key.pem
+          chmod 600 key.pem
 
       - name: Add Host to Known Hosts
         run: |
@@ -37,13 +37,13 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: ~/.ssh/id_rsa
+          key_path: key.pem
           source: dist/ # 빌드된 Vite 정적 파일 경로
           target: /usr/share/nginx/html/ # Nginx 컨테이너와 연결된 볼륨 경로
 
       - name: Clean Up SSH Key
         if: always()
-        run: rm -f ~/.ssh/id_rsa
+        run: rm -f key.pem
 
   notify:
     needs: [build-and-deploy]
