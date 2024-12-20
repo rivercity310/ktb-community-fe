@@ -41,7 +41,7 @@ jobs:
 
           ssh -o StrictHostKeyChecking=no -i key.pem $USER@$HOST "docker service rm ktb-community-fe-nginx || true"
           ssh -o StrictHostKeyChecking=no -i key.pem $USER@$HOST "docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_PAT }}"
-          ssh -o StrictHostKeyChecking=no -i key.pem $USER@$HOST "docker pull ghcr.io/${{ github.repository_owner }}/ktb-community-fe-latest:latest"
+          ssh -o StrictHostKeyChecking=no -i key.pem $USER@$HOST "docker pull ghcr.io/${{ github.repository_owner }}/ktb-community-fe-nginx:latest"
           ssh -o StrictHostKeyChecking=no -i key.pem $USER@$HOST "docker service create -p 3000:80 --replicas 1 --name ktb-community-fe-nginx ghcr.io/${{ github.repository_owner }}/ktb-community-fe-nginx:latest"
           ssh -o StrictHostKeyChecking=no -i key.pem $USER@$HOST "docker service update --network-add community-monitoring_monitoring ktb-community-fe-nginx"
 
