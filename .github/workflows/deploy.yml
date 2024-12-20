@@ -28,10 +28,6 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > key.pem
           chmod 600 key.pem
 
-      - name: Add Host to Known Hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
       - name: Deploy to Nginx Server
         uses: appleboy/scp-action@v0.1.7
         with:
