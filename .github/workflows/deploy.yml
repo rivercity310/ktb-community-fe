@@ -33,7 +33,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: key.pem
+          key: key.pem
           source: dist/ # 빌드된 Vite 정적 파일 경로
           target: /usr/share/nginx/html/ # Nginx 컨테이너와 연결된 볼륨 경로
 
